@@ -2,15 +2,26 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 // ---------------------------------------------------------------------------
-// FlowBase — Convex Database Schema
-// ---------------------------------------------------------------------------
-// Three tables:
-//   workflows — the core playbook entries
-//   tools     — the AI tool directory
-//   saves     — a join between anonymous session IDs and workflow IDs
+// FlowBase — Convex Database Schema (v2 — with Auth)
 // ---------------------------------------------------------------------------
 
 export default defineSchema({
+  // -------------------------------------------------------------------------
+  // users — synced from Clerk on first login
+  // -------------------------------------------------------------------------
+  users: defineTable({
+    // Clerk's stable token identifier — use this for all ownership checks
+    tokenIdentifier: v.string(),
+    clerkId: v.string(),
+    email: v.optional(v.string()),
+    name: v.optional(v.string()),
+    avatarUrl: v.optional(v.string()),
+    // Role-based access: "user" = normal, "admin" = can approve submissions
+    role: v.union(v.literal("user"), v.literal("admin")),
+  })
+    .index("by_token", ["tokenIdentifier"])
+    .index("by_clerk_id", ["clerkId"]),
+
   // -------------------------------------------------------------------------
   // workflows
   // -------------------------------------------------------------------------
@@ -41,13 +52,16 @@ export default defineSchema({
       })
     ),
     mistakes: v.array(v.string()),
-    // Publication status — only "published" workflows appear in the library
-    status: v.union(v.literal("published"), v.literal("draft"), v.literal("pending")),
+    // Publication status
+    status: v.union(v.literal("published"), v.literal("draft"), v.literal("pending"), v.literal("rejected")),
+    // Who submitted it (Clerk tokenIdentifier — optional for seeded data)
+    submittedBy: v.optional(v.string()),
   })
     .index("by_slug", ["slug"])
     .index("by_category", ["category"])
     .index("by_status", ["status"])
-    .index("by_save_count", ["saveCount"]),
+    .index("by_save_count", ["saveCount"])
+    .index("by_submitted_by", ["submittedBy"]),
 
   // -------------------------------------------------------------------------
   // tools
@@ -61,14 +75,19 @@ export default defineSchema({
   }).index("by_category", ["category"]),
 
   // -------------------------------------------------------------------------
-  // saves
-  // Simple anonymous save tracking via a session ID stored in localStorage.
-  // When auth is added, replace sessionId with userId.
+  // saves — now keyed by tokenIdentifier (Clerk) instead of anonymous sessionId
+  // The sessionId field is kept as optional for backwards compatibility with
+  // existing anonymous saves during the transition period.
   // -------------------------------------------------------------------------
   saves: defineTable({
-    sessionId: v.string(),
+    // Real user token from Clerk (set when logged in)
+    tokenIdentifier: v.optional(v.string()),
+    // Legacy anonymous session ID (kept for backward compatibility)
+    sessionId: v.optional(v.string()),
     workflowId: v.id("workflows"),
   })
+    .index("by_token", ["tokenIdentifier"])
+    .index("by_token_and_workflow", ["tokenIdentifier", "workflowId"])
     .index("by_session", ["sessionId"])
     .index("by_session_and_workflow", ["sessionId", "workflowId"]),
 });
