@@ -4,10 +4,6 @@ import React, { useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 
-export const metadata = {
-  title: "AI Tool Directory — FlowBase",
-  description: "Discover the best AI tools for writing, coding, research, and productivity — organized by category.",
-};
 
 export default function ToolsPage() {
   const [activeCategory, setActiveCategory] = useState("All");

@@ -26,8 +26,21 @@ const firaMono = Fira_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "FlowBase - The Playbook for using AI",
-  description: "Curated AI workflows, copy-paste prompts, and step-by-step guides.",
+  title: {
+    default: "FlowBase — The Playbook for Using AI",
+    template: "%s — FlowBase",
+  },
+  description: "Curated AI workflows, copy-paste prompts, and step-by-step guides for marketers, developers, researchers, and creators.",
+  openGraph: {
+    title: "FlowBase — The Playbook for Using AI",
+    description: "Curated AI workflows, copy-paste prompts, and step-by-step guides.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "FlowBase — The Playbook for Using AI",
+    description: "Curated AI workflows, copy-paste prompts, and step-by-step guides.",
+  },
 };
 
 export default function RootLayout({
