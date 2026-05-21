@@ -280,6 +280,14 @@ img, video, iframe, embed, object {
   .nav-auth-label {
     display: none !important;
   }
+  
+  .nav-mobile-spacer {
+    display: block !important;
+  }
+}
+
+.nav-mobile-spacer {
+  display: none;
 }
 
 /* ─── Page-level mobile spacing ────────────────────────────────────────── */
