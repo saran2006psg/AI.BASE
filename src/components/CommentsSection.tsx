@@ -47,12 +47,12 @@ export function CommentsSection({ workflowId }: { workflowId: Id<"workflows"> })
                 <img src={c.user.avatarUrl} alt={c.user.name} style={{ width: 32, height: 32, borderRadius: "50%", flexShrink: 0 }} />
               ) : (
                 <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#000", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>
-                  {c.user.name.charAt(0).toUpperCase()}
+                  {(c.user.name || "A").charAt(0).toUpperCase()}
                 </div>
               )}
               <div>
                 <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
-                  <span className="font-sans" style={{ fontWeight: 700, fontSize: 14, color: "#000" }}>{c.user.name}</span>
+                  <span className="font-sans" style={{ fontWeight: 700, fontSize: 14, color: "#000" }}>{c.user.name || "Anonymous"}</span>
                   <span className="font-mono" style={{ fontSize: 9, color: "rgba(0,0,0,0.4)" }}>{new Date(c._creationTime).toLocaleDateString()}</span>
                 </div>
                 <p style={{ fontSize: 14, color: "rgba(0,0,0,0.7)", margin: "4px 0 0", lineHeight: 1.5 }}>
