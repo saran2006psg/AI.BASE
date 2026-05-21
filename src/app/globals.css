@@ -1,26 +1,174 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --primary: #5863EA; /* Premium Periwinkle Blue */
+  --primary-glow: rgba(88, 99, 234, 0.15);
+  --bg-color: #EBEBEB; /* Flat, cool silver-gray editorial canvas */
+  --text-main: #000000; /* Pure black high-contrast headers */
+  --text-secondary: #2C2C2C; /* Soft black body text */
+  --text-muted: rgba(0, 0, 0, 0.5); /* Muted editorial labels */
+  --glass-bg: rgba(255, 255, 255, 0.7); /* High-opacity frosted glass */
+  --glass-border: rgba(0, 0, 0, 0.08); /* Fine 1px border */
+  --glass-border-hover: rgba(0, 0, 0, 0.18);
+  --radius-editorial: 32px;
+  --radius-control: 16px;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-color); /* Safe, solid fallback background */
+  color: var(--text-secondary);
+  margin: 0;
+  font-family: var(--font-sans), sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* Viewport Backlight Halo Glow - Frames the browser nicely like a native macOS/Arc App */
+.viewport-halo {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1000;
+  box-shadow: inset 0 0 100px rgba(88, 190, 255, 0.15);
+  border: 12px solid rgba(235, 235, 235, 0.15);
+}
+
+/* Global absolute-positioned background gradient (Solves all scrolling, resizing & gradient tiling bugs on body) */
+.global-bg-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 850px;
+  background: linear-gradient(180deg, #3A72EC 0%, #76A5FF 350px, rgba(235, 235, 235, 0) 100%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Typography styles matching the Diabrowser Design System */
+.font-serif {
+  font-family: var(--font-serif), Georgia, serif;
+}
+
+.font-sans {
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+.font-mono {
+  font-family: var(--font-mono), monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.02);
+}
+
+.glass-nav {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-control);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
+}
+
+.glass-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--glass-border-hover);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+/* Active tab state with vertical left indicator */
+.tab-active {
+  background: rgba(0, 0, 0, 0.05) !important;
+  border-left: 3px solid #000000 !important;
+  color: var(--text-main) !important;
+  opacity: 1 !important;
+  border-radius: 0 8px 8px 0 !important;
+}
+
+.glass-button {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  color: var(--text-main);
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.01);
+}
+
+.glass-button:hover {
+  background: rgba(255, 255, 255, 1);
+  border-color: rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Diabrowser Solid Black primary button */
+.glass-button-primary {
+  background: #000000;
+  color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.9);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.glass-button-primary:hover {
+  background: #2C2C2C;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Glass inputs for modern desktop controls */
+.glass-input {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  color: var(--text-main);
+  transition: all 0.2s ease;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.01);
+}
+
+.glass-input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.85);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+.glass-badge {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(8px);
+  color: var(--text-muted);
+}
+
+/* Scrollbar styling for premium feel */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9; 
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1; 
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8; 
 }
