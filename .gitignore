@@ -44,10 +44,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Convex — auto-generated files, never commit these
-convex/_generated/
-
-# Convex local deployment state
+# Convex local deployment state (NOT the generated API — that gets committed)
 .convex/
 
 # Editor
