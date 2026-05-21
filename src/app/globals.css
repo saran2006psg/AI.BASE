@@ -1,29 +1,40 @@
 @import "tailwindcss";
 
 :root {
-  --primary: #5863EA; /* Premium Periwinkle Blue */
+  --primary: #5863EA;
   --primary-glow: rgba(88, 99, 234, 0.15);
-  --bg-color: #EBEBEB; /* Flat, cool silver-gray editorial canvas */
-  --text-main: #000000; /* Pure black high-contrast headers */
-  --text-secondary: #2C2C2C; /* Soft black body text */
-  --text-muted: rgba(0, 0, 0, 0.5); /* Muted editorial labels */
-  --glass-bg: rgba(255, 255, 255, 0.7); /* High-opacity frosted glass */
-  --glass-border: rgba(0, 0, 0, 0.08); /* Fine 1px border */
+  --bg-color: #EBEBEB;
+  --text-main: #000000;
+  --text-secondary: #2C2C2C;
+  --text-muted: rgba(0, 0, 0, 0.5);
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.08);
   --glass-border-hover: rgba(0, 0, 0, 0.18);
   --radius-editorial: 32px;
   --radius-control: 16px;
 }
 
+/* ─── Base ─────────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 body {
-  background-color: var(--bg-color); /* Safe, solid fallback background */
+  background-color: var(--bg-color);
   color: var(--text-secondary);
   margin: 0;
   font-family: var(--font-sans), sans-serif;
   overflow-x: hidden;
   min-height: 100vh;
+  -webkit-text-size-adjust: 100%;
 }
 
-/* Viewport Backlight Halo Glow - Frames the browser nicely like a native macOS/Arc App */
+/* Prevent images and embeds from overflowing */
+img, video, iframe, embed, object {
+  max-width: 100%;
+}
+
+/* ─── Viewport Halo ────────────────────────────────────────────────────── */
 .viewport-halo {
   position: fixed;
   inset: 0;
@@ -33,7 +44,7 @@ body {
   border: 12px solid rgba(235, 235, 235, 0.15);
 }
 
-/* Global absolute-positioned background gradient (Solves all scrolling, resizing & gradient tiling bugs on body) */
+/* ─── Background gradient ──────────────────────────────────────────────── */
 .global-bg-gradient {
   position: absolute;
   top: 0;
@@ -45,7 +56,7 @@ body {
   pointer-events: none;
 }
 
-/* Typography styles matching the Diabrowser Design System */
+/* ─── Typography ───────────────────────────────────────────────────────── */
 .font-serif {
   font-family: var(--font-serif), Georgia, serif;
 }
@@ -60,7 +71,7 @@ body {
   text-transform: uppercase;
 }
 
-/* Glassmorphism Utilities */
+/* ─── Glass utilities ──────────────────────────────────────────────────── */
 .glass-panel {
   background: var(--glass-bg);
   backdrop-filter: blur(20px);
@@ -94,7 +105,6 @@ body {
   background: rgba(255, 255, 255, 0.8);
 }
 
-/* Active tab state with vertical left indicator */
 .tab-active {
   background: rgba(0, 0, 0, 0.05) !important;
   border-left: 3px solid #000000 !important;
@@ -118,7 +128,6 @@ body {
   transform: translateY(-1px);
 }
 
-/* Diabrowser Solid Black primary button */
 .glass-button-primary {
   background: #000000;
   color: #ffffff;
@@ -133,7 +142,6 @@ body {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
-/* Glass inputs for modern desktop controls */
 .glass-input {
   background: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(16px);
@@ -157,18 +165,186 @@ body {
   color: var(--text-muted);
 }
 
-/* Scrollbar styling for premium feel */
+/* ─── Responsive grid helpers ──────────────────────────────────────────── */
+
+/* Auto-responsive card grid — 1 col on mobile, fills up to 3 on desktop */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  gap: 20px;
+}
+
+/* Category pill row — scrollable on mobile, wrapping on desktop */
+.pill-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+@media (max-width: 640px) {
+  .pill-row {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+  .pill-row::-webkit-scrollbar {
+    display: none;
+  }
+  .pill-row button {
+    flex-shrink: 0;
+  }
+}
+
+/* ─── Navbar mobile menu ───────────────────────────────────────────────── */
+
+/* Hamburger — hidden on desktop */
+.nav-hamburger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 8px;
+  color: #000;
+  flex-shrink: 0;
+}
+
+/* Mobile dropdown menu */
+.nav-mobile-menu {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99;
+  background: rgba(235, 235, 235, 0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 40px 24px;
+}
+
+.nav-mobile-menu.open {
+  display: flex;
+}
+
+.nav-mobile-link {
+  font-size: 28px;
+  font-weight: 800;
+  color: #000;
+  text-decoration: none;
+  letter-spacing: -0.03em;
+  padding: 12px 0;
+  width: 100%;
+  text-align: center;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  font-family: var(--font-sans), sans-serif;
+}
+
+.nav-mobile-link:last-child {
+  border-bottom: none;
+}
+
+.nav-mobile-close {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #000;
+  line-height: 1;
+}
+
+@media (max-width: 640px) {
+  /* Show hamburger, hide nav links and auth CTA text */
+  .nav-hamburger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-links {
+    display: none !important;
+  }
+
+  .nav-auth-label {
+    display: none !important;
+  }
+}
+
+/* ─── Page-level mobile spacing ────────────────────────────────────────── */
+@media (max-width: 640px) {
+  /* Tighten hero padding */
+  .hero-section {
+    padding: 80px 20px 48px !important;
+  }
+
+  /* Full-width CTA section */
+  .cta-section {
+    margin: 0 12px 60px !important;
+    padding: 48px 20px !important;
+    border-radius: 20px !important;
+  }
+
+  /* Reduce page padding on list pages */
+  .page-container {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  /* Stack the section header row on mobile */
+  .section-header-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 4px !important;
+  }
+
+  /* Reduce font sizes on very small screens */
+  h1 { 
+    word-break: break-word;
+  }
+
+  /* Sticky category bar on mobile */
+  .category-bar {
+    position: sticky;
+    top: 72px;
+    z-index: 10;
+    background: rgba(235, 235, 235, 0.95);
+    backdrop-filter: blur(12px);
+    padding: 8px 16px;
+    margin: 0 -16px;
+  }
+}
+
+/* ─── Scrollbar styling ────────────────────────────────────────────────── */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9; 
+  background: #f1f5f9;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1; 
+  background: #cbd5e1;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8; 
+  background: #94a3b8;
+}
+
+/* ─── Touch targets ────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  button, a {
+    min-height: 44px;
+  }
 }

@@ -22,7 +22,7 @@ export default function HomePage() {
   return (
     <div style={{ position: "relative", zIndex: 1 }}>
       {/* Hero Section */}
-      <div style={{
+      <div className="hero-section" style={{
         padding: "120px 24px 80px",
         textAlign: "center",
         position: "relative",
@@ -87,7 +87,7 @@ export default function HomePage() {
         </div>
 
         {/* Minimalist Stats Row */}
-        <div style={{ display: "flex", gap: 50, justifyContent: "center", marginTop: 72, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: 32, justifyContent: "center", marginTop: 72, flexWrap: "wrap" }}>
           {[["200+", "Workflows"], ["50+", "AI Tools"], ["12k+", "Saves"], ["4", "Categories"]].map(([n, l]) => (
             <div key={l} style={{ textAlign: "center" }}>
               <div className="font-serif" style={{ fontSize: 32, fontWeight: 700, color: "#000000" }}>{n}</div>
@@ -97,13 +97,9 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Category Pills (Floating pill layout) */}
-      <div style={{ padding: "16px 24px 0", maxWidth: 1080, margin: "0 auto" }}>
-        <div className="glass-panel" style={{ 
-          display: "flex", 
-          gap: 6, 
-          flexWrap: "wrap", 
-          justifyContent: "center",
+      {/* Category Pills */}
+      <div style={{ padding: "16px 16px 0", maxWidth: 1080, margin: "0 auto" }}>
+        <div className="glass-panel pill-row" style={{ 
           padding: "8px",
           borderRadius: 999,
           maxWidth: "fit-content",
@@ -131,7 +127,7 @@ export default function HomePage() {
 
       {/* Featured Workflows Grid */}
       <div style={{ padding: "50px 24px 100px", maxWidth: 1080, margin: "0 auto" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 28 }}>
+        <div className="section-header-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 28 }}>
           <div>
             <h2 className="font-serif" style={{ fontSize: 28, fontWeight: 700, color: "#000000", margin: 0 }}>
               {activeCategory === "All" ? "Featured Workflows" : `${activeCategory} Workflows`}
@@ -152,17 +148,13 @@ export default function HomePage() {
           }}>View all <span>→</span></Link>
         </div>
         
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-          gap: 24,
-        }}>
+        <div className="card-grid">
           {filtered.map(w => <WorkflowCard key={w._id} workflow={w} />)}
         </div>
       </div>
 
       {/* CTA Banner (Huge rounded corners + Diabrowser elegant stamp stamp layout) */}
-      <div className="glass-panel" style={{ 
+      <div className="glass-panel cta-section" style={{ 
         margin: "0 24px 100px", 
         borderRadius: "var(--radius-editorial)", 
         padding: "80px 24px", 

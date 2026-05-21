@@ -32,7 +32,7 @@ export default function WorkflowsPage() {
     });
 
   return (
-    <div style={{ maxWidth: 1080, margin: "0 auto", padding: "80px 24px 100px", position: "relative", zIndex: 1 }}>
+    <div className="page-container" style={{ maxWidth: 1080, margin: "0 auto", padding: "80px 24px 100px", position: "relative", zIndex: 1 }}>
       <div className="font-mono" style={{ fontSize: 11, color: "#5863EA", fontWeight: 700, marginBottom: 8 }}>
         ✦ INDEX // SYSTEMATIC PLAYBOOKS
       </div>
@@ -64,15 +64,14 @@ export default function WorkflowsPage() {
         />
       </div>
 
-      {/* Filters Pill Menu Bar */}
-      <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 40, alignItems: "center" }}>
-        <div className="glass-panel" style={{ 
-          display: "flex", 
-          gap: 4, 
-          flexWrap: "wrap",
+      {/* Filters */}
+      <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 40, alignItems: "center" }}>
+        <div className="glass-panel pill-row" style={{ 
           padding: "6px",
           borderRadius: 999,
           border: "1px solid rgba(0, 0, 0, 0.06)",
+          flex: "1 1 auto",
+          minWidth: 0,
         }}>
           {CATEGORIES.map(cat => {
             const isActive = category === cat;
@@ -86,17 +85,18 @@ export default function WorkflowsPage() {
                 fontSize: 13, 
                 fontWeight: 700, 
                 cursor: "pointer",
-                boxShadow: "none"
+                boxShadow: "none",
+                flexShrink: 0,
               }}>{cat}</button>
             )
           })}
         </div>
         
-        {/* Right side dropdown selects */}
-        <div style={{ marginLeft: "auto", display: "flex", gap: 12 }}>
+        {/* Selects — full width row on mobile */}
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", flexShrink: 0 }}>
           <select value={difficulty} onChange={e => setDifficulty(e.target.value)} className="glass-input font-mono" style={{
             borderRadius: 12, 
-            padding: "10px 18px",
+            padding: "10px 14px",
             fontSize: 11, 
             fontWeight: 700,
             cursor: "pointer", 
@@ -108,7 +108,7 @@ export default function WorkflowsPage() {
           
           <select value={sort} onChange={e => setSort(e.target.value)} className="glass-input font-mono" style={{
             borderRadius: 12, 
-            padding: "10px 18px",
+            padding: "10px 14px",
             fontSize: 11, 
             fontWeight: 700,
             cursor: "pointer", 
@@ -125,7 +125,7 @@ export default function WorkflowsPage() {
       </div>
 
       {/* Grid of clean frosted cards */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 24 }}>
+      <div className="card-grid">
         {filtered.map(w => <WorkflowCard key={w._id} workflow={w} />)}
         {filtered.length === 0 && (
           <div className="glass-panel" style={{ gridColumn: "1/-1", textAlign: "center", padding: "100px 0", borderRadius: 24, border: "1px solid rgba(0,0,0,0.06)" }}>

@@ -14,7 +14,7 @@ export default function ToolsPage() {
   const filtered = activeCategory === "All" ? allTools : allTools.filter((t) => t.category === activeCategory);
 
   return (
-    <div style={{ maxWidth: 1080, margin: "0 auto", padding: "80px 24px 100px", position: "relative", zIndex: 1 }}>
+    <div className="page-container" style={{ maxWidth: 1080, margin: "0 auto", padding: "80px 24px 100px", position: "relative", zIndex: 1 }}>
       <div className="font-mono" style={{ fontSize: 11, color: "#5863EA", fontWeight: 700, marginBottom: 8 }}>
         ✦ DIRECTORY // CURATED UTILITIES
       </div>
@@ -28,14 +28,12 @@ export default function ToolsPage() {
       </p>
 
       {/* Categories Floating Pill Bar */}
-      <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 44 }}>
-        <div className="glass-panel" style={{ 
-          display: "flex", 
-          gap: 4, 
-          flexWrap: "wrap",
+      <div style={{ marginBottom: 44 }}>
+        <div className="glass-panel pill-row" style={{ 
           padding: "6px",
           borderRadius: 999,
           border: "1px solid rgba(0, 0, 0, 0.06)",
+          maxWidth: "fit-content",
         }}>
           {cats.map(cat => {
             const isActive = activeCategory === cat;
@@ -49,7 +47,8 @@ export default function ToolsPage() {
                 fontSize: 13, 
                 fontWeight: 700, 
                 cursor: "pointer",
-                boxShadow: "none"
+                boxShadow: "none",
+                flexShrink: 0,
               }}>{cat}</button>
             )
           })}
@@ -57,7 +56,7 @@ export default function ToolsPage() {
       </div>
 
       {/* Grid of clean off-white tools cards */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 24 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 280px), 1fr))", gap: 20 }}>
         {filtered.map(tool => (
           <div key={tool._id} className="glass-card" style={{
             padding: "28px",
