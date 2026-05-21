@@ -37,6 +37,26 @@ export const getAll = query({
   },
 });
 
+/** Search workflows by term. */
+export const search = query({
+  args: { searchTerm: v.string() },
+  handler: async (ctx, { searchTerm }) => {
+    if (!searchTerm) {
+      return await ctx.db
+        .query("workflows")
+        .withIndex("by_status", (q) => q.eq("status", "published"))
+        .take(100)
+        .then((rows) => rows.sort((a, b) => b.saveCount - a.saveCount));
+    }
+    return await ctx.db
+      .query("workflows")
+      .withSearchIndex("search_all", (q) =>
+        q.search("searchBody", searchTerm).eq("status", "published")
+      )
+      .take(100);
+  },
+});
+
 /** Return a single workflow by its URL slug. */
 export const getBySlug = query({
   args: { slug: v.string() },
@@ -87,6 +107,24 @@ export const getBySubmitter = query({
   },
 });
 
+/** Return all published workflows submitted by a specific user (public profile). */
+export const getBySubmitterClerkId = query({
+  args: { clerkId: v.string() },
+  handler: async (ctx, { clerkId }) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
+      .unique();
+    if (!user) return [];
+
+    return await ctx.db
+      .query("workflows")
+      .withIndex("by_submitted_by", (q) => q.eq("submittedBy", user.tokenIdentifier))
+      .take(50)
+      .then(rows => rows.filter(w => w.status === "published").sort((a, b) => b.saveCount - a.saveCount));
+  },
+});
+
 /** Admin only: return all pending workflows awaiting review. */
 export const getPending = query({
   args: {},
@@ -106,6 +144,21 @@ export const getPending = query({
       .query("workflows")
       .withIndex("by_status", (q) => q.eq("status", "pending"))
       .take(50);
+  },
+});
+
+/** Return all published workflows that use a specific tool. */
+export const getByTool = query({
+  args: { toolName: v.string() },
+  handler: async (ctx, { toolName }) => {
+    const allPublished = await ctx.db
+      .query("workflows")
+      .withIndex("by_status", (q) => q.eq("status", "published"))
+      .collect();
+      
+    return allPublished
+      .filter((w) => w.tools.some(t => t.toLowerCase() === toolName.toLowerCase()))
+      .sort((a, b) => b.saveCount - a.saveCount);
   },
 });
 
@@ -170,6 +223,7 @@ export const submit = mutation({
 
     return await ctx.db.insert("workflows", {
       ...args,
+      searchBody: `${args.title} ${args.summary} ${args.problem}`,
       saveCount: 0,
       status: "pending",
       submittedBy: identity.tokenIdentifier,

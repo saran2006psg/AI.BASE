@@ -56,12 +56,18 @@ export default defineSchema({
     status: v.union(v.literal("published"), v.literal("draft"), v.literal("pending"), v.literal("rejected")),
     // Who submitted it (Clerk tokenIdentifier — optional for seeded data)
     submittedBy: v.optional(v.string()),
+    // Search body combining title, summary, problem
+    searchBody: v.optional(v.string()),
   })
     .index("by_slug", ["slug"])
     .index("by_category", ["category"])
     .index("by_status", ["status"])
     .index("by_save_count", ["saveCount"])
-    .index("by_submitted_by", ["submittedBy"]),
+    .index("by_submitted_by", ["submittedBy"])
+    .searchIndex("search_all", {
+      searchField: "searchBody",
+      filterFields: ["status"],
+    }),
 
   // -------------------------------------------------------------------------
   // tools
@@ -90,4 +96,15 @@ export default defineSchema({
     .index("by_token_and_workflow", ["tokenIdentifier", "workflowId"])
     .index("by_session", ["sessionId"])
     .index("by_session_and_workflow", ["sessionId", "workflowId"]),
+
+  // -------------------------------------------------------------------------
+  // comments
+  // -------------------------------------------------------------------------
+  comments: defineTable({
+    workflowId: v.id("workflows"),
+    tokenIdentifier: v.string(), // Clerk user ID
+    text: v.string(),
+  })
+    .index("by_workflow", ["workflowId"])
+    .index("by_token", ["tokenIdentifier"]),
 });

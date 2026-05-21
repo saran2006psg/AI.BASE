@@ -6,6 +6,7 @@ import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { CategoryBadge, DifficultyBadge } from "@/components/ui/Badges";
 import { SaveButton, Accordion, CopyBlock } from "@/components/ui/Interactive";
+import { CommentsSection } from "@/components/CommentsSection";
 
 function SectionHeader({ icon, label }: { icon: string, label: string }) {
   return (
@@ -157,6 +158,11 @@ export default function WorkflowDetailPage({ params }: { params: Promise<{ slug:
               </div>
             ))}
           </div>
+        </section>
+
+        {/* Comments Section */}
+        <section>
+          <CommentsSection workflowId={workflow._id} />
         </section>
       </div>
     </div>

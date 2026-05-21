@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import Link from "next/link";
 
 
 export default function ToolsPage() {
@@ -58,14 +59,16 @@ export default function ToolsPage() {
       {/* Grid of clean off-white tools cards */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 280px), 1fr))", gap: 20 }}>
         {filtered.map(tool => (
-          <div key={tool._id} className="glass-card" style={{
-            padding: "28px",
-            display: "flex", 
-            flexDirection: "column",
-            borderRadius: 24,
-            border: "1px solid rgba(0, 0, 0, 0.08)",
-          }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
+          <Link href={`/tools/${encodeURIComponent(tool.name)}`} key={tool._id} style={{ textDecoration: "none" }}>
+            <div className="glass-card" style={{
+              padding: "28px",
+              display: "flex", 
+              flexDirection: "column",
+              borderRadius: 24,
+              border: "1px solid rgba(0, 0, 0, 0.08)",
+              height: "100%",
+            }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                 <div style={{
                   width: 44, 
@@ -106,7 +109,8 @@ export default function ToolsPage() {
             }}
               onClick={e => e.stopPropagation()}
             >VISIT SITE ↗</a>
-          </div>
+            </div>
+          </Link>
         ))}
       </div>
     </div>

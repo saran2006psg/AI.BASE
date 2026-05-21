@@ -27,6 +27,17 @@ export const me = query({
   },
 });
 
+/** Return a user by their public clerkId. */
+export const getByClerkId = query({
+  args: { clerkId: v.string() },
+  handler: async (ctx, { clerkId }) => {
+    return await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
+      .unique();
+  },
+});
+
 // ---------------------------------------------------------------------------
 // MUTATIONS
 // ---------------------------------------------------------------------------

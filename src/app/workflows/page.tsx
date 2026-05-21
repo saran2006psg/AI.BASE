@@ -13,17 +13,14 @@ export default function WorkflowsPage() {
   const [difficulty, setDifficulty] = useState("All");
   const [sort, setSort] = useState("Most Saved");
 
-  // Live data from Convex
-  const allWorkflows = useQuery(api.workflows.getAll) ?? [];
+  // Live data from Convex with backend search
+  const allWorkflows = useQuery(api.workflows.search, { searchTerm: search }) ?? [];
 
   const filtered = allWorkflows
     .filter((w) => {
-      const matchSearch =
-        w.title.toLowerCase().includes(search.toLowerCase()) ||
-        w.summary.toLowerCase().includes(search.toLowerCase());
       const matchCat = category === "All" || w.category === category;
       const matchDiff = difficulty === "All" || w.difficulty === difficulty;
-      return matchSearch && matchCat && matchDiff;
+      return matchCat && matchDiff;
     })
     .sort((a, b) => {
       if (sort === "Most Saved") return b.saveCount - a.saveCount;
