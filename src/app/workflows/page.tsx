@@ -6,6 +6,11 @@ import { api } from "../../../convex/_generated/api";
 import { CATEGORIES, DIFFICULTIES } from "@/lib/data";
 import { WorkflowCard } from "@/components/WorkflowCard";
 
+export const metadata = {
+  title: "Workflow Library — FlowBase",
+  description: "Browse 200+ curated AI workflows, step-by-step guides, and copy-paste prompts.",
+};
+
 export default function WorkflowsPage() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");

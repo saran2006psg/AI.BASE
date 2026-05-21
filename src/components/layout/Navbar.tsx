@@ -2,11 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
-import { useEffect } from "react";
-import { useConvexAuth } from "convex/react";
+import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 
 // ---------------------------------------------------------------------------
 // Navbar
@@ -14,15 +10,7 @@ import { useConvexAuth } from "convex/react";
 
 export function Navbar() {
   const pathname = usePathname();
-  const { isAuthenticated } = useConvexAuth();
-  const getOrCreate = useMutation(api.users.getOrCreate);
-
-  // Sync Clerk identity to Convex users table on every login
-  useEffect(() => {
-    if (isAuthenticated) {
-      getOrCreate().catch(console.error);
-    }
-  }, [isAuthenticated, getOrCreate]);
+  const { isSignedIn } = useUser();
 
   const navItems = [
     { label: "Workflows", href: "/workflows" },
@@ -90,8 +78,21 @@ export function Navbar() {
           })}
         </div>
 
-        {/* Auth buttons */}
-        <SignedOut>
+        {/* Auth section */}
+        {isSignedIn ? (
+          <>
+            <Link href="/profile" style={{
+              color: "rgba(0,0,0,0.6)",
+              fontSize: 12,
+              fontWeight: 700,
+              textDecoration: "none",
+              padding: "6px 12px",
+              borderRadius: 999,
+              flexShrink: 0,
+            }}>My saves</Link>
+            <UserButton />
+          </>
+        ) : (
           <SignInButton mode="modal">
             <button className="glass-button-primary" style={{
               borderRadius: 999,
@@ -103,28 +104,7 @@ export function Navbar() {
               flexShrink: 0,
             }}>Sign in</button>
           </SignInButton>
-        </SignedOut>
-
-        <SignedIn>
-          <Link href="/profile" style={{
-            color: "rgba(0,0,0,0.6)",
-            fontSize: 12,
-            fontWeight: 700,
-            textDecoration: "none",
-            padding: "6px 12px",
-            borderRadius: 999,
-            flexShrink: 0,
-          }}>My saves</Link>
-          {/* Clerk's pre-built user avatar + dropdown menu */}
-          <UserButton
-            afterSignOutUrl="/"
-            appearance={{
-              elements: {
-                avatarBox: { width: 32, height: 32 },
-              },
-            }}
-          />
-        </SignedIn>
+        )}
       </div>
     </nav>
   );
